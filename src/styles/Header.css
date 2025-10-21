@@ -1,0 +1,454 @@
+/* src/styles/Header.css */
+
+/* CSS Değişkenleri (Renk Paleti) */
+:root {
+  --primary-color: #007bff;
+  --dark-color: #1a1a1a;
+  --light-color: #ffffff;
+  --grey-color: #f4f4f4;
+  --text-color: #333;
+  --border-color: #eaeaea;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --header-height: 70px;
+}
+
+/* --- Genel Header Stili --- */
+.modern-header {
+  width: 100%;
+  height: var(--header-height);
+  background: var(--light-color);
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: 0 2px 5px var(--shadow-color);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  transition: top 0.3s ease-in-out;
+}
+
+/* Header'ı gizleme efekti */
+.modern-header.hide {
+  top: -80px; /* Header yüksekliğinden biraz fazla */
+}
+
+.header-container {
+  max-width: 1200px;
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* --- 1. Logo Alanı --- */
+.logo-area .logo-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: var(--dark-color);
+}
+
+.logo {
+  height: 40px; /* Logonuzun boyutuna göre ayarlayın */
+  margin-right: 10px;
+}
+
+.brand-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -1px;
+}
+
+/* --- 2. Navigasyon (Desktop) --- */
+.nav-links-desktop {
+  display: none; /* Mobilde gizli */
+}
+
+@media (min-width: 769px) {
+  .nav-links-desktop {
+    display: flex;
+    gap: 25px;
+  }
+  .nav-links-desktop a {
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: 500;
+    font-size: 1rem;
+    position: relative;
+    transition: color 0.2s;
+  }
+  .nav-links-desktop a::after {
+    content: "";
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--primary-color);
+    transition: width 0.3s ease;
+  }
+  .nav-links-desktop a:hover {
+    color: var(--primary-color);
+  }
+  .nav-links-desktop a:hover::after {
+    width: 100%;
+  }
+}
+
+/* --- 3. Aksiyon Alanı (Search, Cart, Menu) --- */
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* Arama Kutusu */
+.search-box {
+  display: none; /* Mobilde gizle, yer kaplamasın */
+  align-items: center;
+  background: var(--grey-color);
+  border-radius: 20px;
+  padding: 5px 10px;
+}
+
+@media (min-width: 769px) {
+  .search-box {
+    display: flex; /* Masaüstünde göster */
+  }
+}
+
+.search-box input {
+  border: none;
+  background: transparent;
+  outline: none;
+  padding: 5px;
+  font-size: 0.9rem;
+  width: 150px;
+  transition: width 0.3s ease;
+}
+
+.search-box input:focus {
+  width: 200px; /* Odaklanınca genişlesin */
+}
+
+.search-box .search-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin-right: 5px;
+  color: #888;
+}
+.search-box .search-btn:hover {
+  color: var(--dark-color);
+}
+
+/* Aksiyon Butonları (Sepet, Hamburger) */
+.action-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  position: relative;
+  color: var(--dark-color);
+}
+
+.cart-badge {
+  position: absolute;
+  top: -5px;
+  right: -8px;
+  background: var(--primary-color);
+  color: var(--light-color);
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid var(--light-color); /* Header ile kontrast */
+}
+
+/* Hamburger Menü (Sadece mobilde görünür) */
+.hamburger {
+  display: block;
+}
+@media (min-width: 769px) {
+  .hamburger {
+    display: none;
+  }
+}
+
+/* --- Overlay --- */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1500;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+/* Hem menü hem sepet açıkken aktifleştir */
+.nav-links-mobile.active ~ .overlay,
+.cart-drawer.active ~ .overlay,
+body:has(.nav-links-mobile.active) .overlay,
+body:has(.cart-drawer.active) .overlay {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+
+/* --- Mobil Navigasyon Menüsü (Yandan Kayan) --- */
+.nav-links-mobile {
+  position: fixed;
+  top: 0;
+  left: -300px; /* Başlangıçta ekranın solunda */
+  width: 300px;
+  height: 100vh;
+  background: var(--light-color);
+  z-index: 2000;
+  box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+  transition: left 0.3s ease-in-out;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.nav-links-mobile.active {
+  left: 0; /* Aktif olduğunda ekrana gelsin */
+}
+
+.nav-links-mobile .close-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  align-self: flex-end;
+  margin-bottom: 20px;
+}
+
+.nav-links-mobile a {
+  text-decoration: none;
+  color: var(--text-color);
+  font-size: 1.2rem;
+  font-weight: 500;
+  padding: 10px 5px;
+  border-bottom: 1px solid var(--border-color);
+}
+.nav-links-mobile a:hover {
+  color: var(--primary-color);
+}
+
+.nav-links-mobile .logout-btn {
+  margin-top: auto; /* En alta iter */
+  background: var(--grey-color);
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background 0.2s;
+}
+.nav-links-mobile .logout-btn:hover {
+  background: #ddd;
+}
+
+
+/* --- Sepet (Yandan Kayan Drawer) --- */
+.cart-drawer {
+  position: fixed;
+  top: 0;
+  right: -100%; /* Başlangıçta ekranın sağında */
+  width: 100%;
+  max-width: 400px; /* Maksimum genişlik */
+  height: 100vh;
+  background: var(--light-color);
+  z-index: 2000;
+  box-shadow: -4px 0 10px rgba(0, 0, 0, 0.1);
+  transition: right 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+}
+
+.cart-drawer.active {
+  right: 0; /* Aktif olduğunda ekrana gelsin */
+}
+
+.cart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid var(--border-color);
+}
+.cart-header h3 {
+  margin: 0;
+  font-size: 1.3rem;
+}
+.cart-header .close-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.cart-content {
+  flex-grow: 1; /* Kalan tüm alanı kapla */
+  overflow-y: auto; /* İçerik taşarsa kaydırma çubuğu */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Boş Sepet Stili */
+.empty-cart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px;
+  margin: auto; /* Dikey ve yatay ortalama */
+  color: #888;
+}
+.empty-cart p {
+  font-size: 1.1rem;
+  margin: 20px 0;
+}
+.start-shopping-btn {
+  background: var(--primary-color);
+  color: var(--light-color);
+  border: none;
+  padding: 12px 25px;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.start-shopping-btn:hover {
+  opacity: 0.85;
+}
+
+
+/* Dolu Sepet Stili */
+.cart-items-list {
+  padding: 20px;
+  flex-grow: 1; /* Footer'ı en alta itmek için */
+}
+
+.cart-item {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 20px;
+}
+.cart-item:last-child {
+  border-bottom: none;
+}
+
+.cart-item img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+.cart-info {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.cart-info .title {
+  font-weight: 600;
+  margin: 0;
+  font-size: 1rem;
+}
+.cart-info .price {
+  font-size: 0.9rem;
+  color: #555;
+  margin: 5px 0;
+}
+
+.cart-info .controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 5px;
+}
+
+.quantity-control {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+}
+.quantity-control button {
+  background: var(--grey-color);
+  border: none;
+  cursor: pointer;
+  padding: 5px 10px;
+  font-size: 1.2rem;
+}
+.quantity-control span {
+  padding: 5px 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.remove-btn {
+  background: none;
+  border: none;
+  color: #a00;
+  cursor: pointer;
+  font-size: 0.8rem;
+  text-decoration: underline;
+}
+
+/* Sepet Footer (Ödeme Butonu) */
+.cart-footer {
+  padding: 20px;
+  border-top: 1px solid var(--border-color);
+  background: var(--light-color);
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.checkout-btn {
+  background: var(--primary-color);
+  color: var(--light-color);
+  border: none;
+  padding: 15px;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.checkout-btn:hover {
+  opacity: 0.85;
+}
+.clear-cart-btn {
+  background: none;
+  border: 1px solid #a00;
+  color: #a00;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+.clear-cart-btn:hover {
+  background: #fdf2f2;
+}
