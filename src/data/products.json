@@ -1,7 +1,0 @@
-[
-  { "id": 1, "title": "Ürün 1", "price": 100, "image": "/images/img1.jpg" },
-  { "id": 2, "title": "Ürün 2", "price": 200, "image": "/images/img2.jpg"},
-  { "id": 3, "title": "Ürün 3", "price": 300, "image": "/images/img3.jpg" },  
-  { "id": 1, "title": "Ürün 4", "price": 100, "image": "/images/img4.jpg" },
-  { "id": 2, "title": "Ürün 5", "price": 200, "image": "/images/img5.jpg"}
-]

@@ -1,58 +1,64 @@
-import React, { useState } from "react";
-import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from "react-router-dom";
-import Login from "./auth/Login";
-import Products from "./pages/Products";
-import Header from "./components/Header";
-import PrivateRoute from "./components/PrivateRoute";
-import ProductDetail from "./pages/ProductDetail";
-import AddProduct from "./pages/AddProduct";
+import React from "react";
+// --- HATA ÇÖZÜMÜ: REACT ROUTER İMPORTLARI ---
+import { Routes, Route, Navigate } from "react-router-dom"; 
 
-function AppWrapper() {
-  const location = useLocation();
-  const isLoginPage = location.pathname === "/login";
+// --- HATA ÇÖZÜMÜ: DİĞER TÜM BİLEŞEN İMPORTLARI ---
+// Layout ve Auth
+import Layout from "./components/Layout";
+import PrivateRoute from "./feature/auth/PrivateRoute";
+import LoginPage from "./feature/auth/LoginPage";
 
-  // Ürünleri buradan yöneteceğiz
-  const [products, setProducts] = useState([]);
+// Productsroducts/ProductsPage";
+import ProductDetailPage from "./feature/products/ProductDetailPage";
+import ProductFormPage from "./feature/products/ProductFormPage";
+import ProductsPage from "./feature/products/ProductsPage";
 
-  return (
-    <>
-      {!isLoginPage && <Header />}
-      <Routes>
-        <Route path="/login" element={<Login />} />
+// Cart
+import CartPage from "./feature/cart/CartPage";
 
-        {/* Private route */}
-        <Route path="/products" element={
-          <PrivateRoute>
-            <Products products={products} setProducts={setProducts} />
-          </PrivateRoute>
-        } />
-
-        {/* Ürün detay sayfası */}
-        <Route path="/product/:id" element={
-          <PrivateRoute>
-            <ProductDetail products={products} />
-          </PrivateRoute>
-        } />
-
-        {/* Yeni ürün ekleme sayfası */}
-        <Route path="/add-product" element={
-          <PrivateRoute>
-            <AddProduct products={products} setProducts={setProducts} />
-          </PrivateRoute>
-        } />
-
-        {/* Default yönlendirme */}
-        <Route path="*" element={<Navigate to="/products" replace />} />
-      </Routes>
-    </>
-  );
-}
+// Profile (Yeni eklediklerimiz)
+import ProfileLayout from "./feature/profile/ProfileLayout";
+import ProfileInfoPage from "./feature/profile/ProfileInfoPage";
+import ProfileOrdersPage from "./feature/profile/ProfileOrdersPage";
+import ProfileAddressesPage from "./feature/profile/ProfileAddressesPage";
 
 function App() {
   return (
-    <Router>
-      <AppWrapper />
-    </Router>
+    <Routes>
+      {/* 1. Login Sayfası (Header'sız) */}
+      <Route path="/login" element={<LoginPage />} />
+
+      {/* 2. Korumalı Sayfalar (Header'lı) */}
+      <Route
+        element={
+          <PrivateRoute>
+            <Layout />
+          </PrivateRoute>
+        }
+      >
+        {/* Ana Rotalar */}
+        <Route path="/products" element={<ProductsPage />} />
+        <Route path="/product/:id" element={<ProductDetailPage />} />
+        <Route path="/cart" element={<CartPage />} />
+        
+        {/* Admin Rotaları (Form) */}
+        <Route path="/add-product" element={<ProductFormPage />} />
+        <Route path="/update-product/:id" element={<ProductFormPage />} />
+        
+        {/* Profil Rotaları */}
+        <Route path="/profile" element={<ProfileLayout />}>
+          <Route index element={<ProfileInfoPage />} /> 
+          <Route path="orders" element={<ProfileOrdersPage />} />
+          <Route path="addresses" element={<ProfileAddressesPage />} />
+        </Route>
+        
+        {/* Varsayılan Rota */}
+        <Route path="/" element={<Navigate to="/products" replace />} />
+      </Route>
+
+      {/* 3. Eşleşmeyen Rotalar */}
+      <Route path="*" element={<Navigate to="/products" replace />} />
+    </Routes>
   );
 }
 
